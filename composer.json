@@ -1,0 +1,29 @@
+{
+  "name": "crankd/rapid-revisions",
+  "description": "",
+  "type": "library",
+  "license": "MIT",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "Nathaniel",
+      "email": "nat@crankd.nz"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Crankd\\RapidRevisions\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Crankd\\RapidRevisions\\RapidRevisionsProvider"
+      ]
+    }
+  }
+}
