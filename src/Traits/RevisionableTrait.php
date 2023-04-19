@@ -23,17 +23,6 @@ trait RevisionableTrait
         return $this->morphMany(Revision::class, 'revisionables')->orderBy('created_at', 'DESC');
     }
 
-    // createRevision for Relation
-    private function createRevisionForPivot($model)
-    {
-        $data_revision = [
-            'created_by' => Auth::check() ? Auth::user()->id : null,
-            'model_id' => $model->pivot->id,
-            'revisionables_id' => $model->pivot->id,
-            'revisionables_type' => get_class($model->pivot),
-        ];
-        return Revision::create($data_revision);
-    }
 
     private function createRevisionForModel($model)
     {
@@ -46,13 +35,13 @@ trait RevisionableTrait
         return Revision::create($data_revision);
     }
 
-    public function createRevision()
+    public function createRevision($force = false)
     {
         $revisionableLimit = $this->revisionableLimit ?? 10; // Max number of revisions
         $revisionableDelay = $this->revisionableDelay ?? 1; // Hours delay between revisions
 
         // check if the delay is not met
-        if ($this->revisions()->where('created_at', '>=', now()->subHours($revisionableDelay))->count() > 0) {
+        if ($force != true && $this->revisions()->where('created_at', '>=', now()->subHours($revisionableDelay))->count() > 0) {
             return false;
         }
 
@@ -62,7 +51,6 @@ trait RevisionableTrait
         // if this has groups
         if ($this->groups->count() > 0) {
             foreach ($this->groups as $group) {
-                // $revisionPivot =  $this->createRevisionForPivot($group);
                 $pivot = $group->pivot; // Retrieve the pivot entry for the group
                 $clonedPivot = $pivot->replicate(); // Create a copy of the pivot entry
                 $revision->groups()->attach([$group->id => [
@@ -75,12 +63,13 @@ trait RevisionableTrait
         $this->createRevisionForModel($revision);
 
 
-        if ($this->revisions()->count() >= $revisionableLimit) {
+        if ($force != true && $this->revisions()->count() >= $revisionableLimit) {
             $this->revisions()->orderBy('created_at', 'ASC')->first()->delete();
         }
 
         return $revision;
     }
+
 
     // restoreRevision
     public static function restoreRevision($revisionable)
@@ -88,29 +77,17 @@ trait RevisionableTrait
         // Current model to be restored dont use the scope revisionable
         $modelCurrent = $revisionable->revisionables_type::withoutGlobalScope('revisionable')->where('id', $revisionable->revisionables_id)->first();
         $modelRestore = $revisionable->revisionables_type::withoutGlobalScope('revisionable')->where('id', $revisionable->model_id)->first();
-
         // if the modelCurrent has groups
         // get the current model groups
         if ($modelCurrent->groups->count() > 0) {
-
             // update the group custom_field_values with the revision group custom_field_values
-
             foreach ($modelCurrent->groups as $group) {
-
                 $values = $modelRestore->groups->where('id', $group->id)->first()->pivot->custom_field_values;
                 $modelCurrent->updateGroupValues($group->key, $values);
-
-                //     $pivot = $group->pivot; // Retrieve the pivot entry for the group
-                //     $clonedPivot = $pivot->replicate(); // Create a copy of the pivot entry
-                //     $modelRestore->groups()->attach([$group->id => [
-                //         'custom_field_values' => $clonedPivot->toArray()['custom_field_values']
-                //     ]]);
             }
             // $modelRestore->saveQuietly();
         }
-
-
-        $modelCurrent->createRevision();
+        $modelCurrent->createRevision(true);
         $response = $modelCurrent->update($modelRestore->toArray());
 
         return $response;
