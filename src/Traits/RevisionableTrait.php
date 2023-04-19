@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 trait RevisionableTrait
 {
     // boot function  only get where model id not in revisions model_id
-    protected static function bootRevisionable()
+    protected static function bootRevisionableTrait()
     {
         static::addGlobalScope('revisionable', function ($builder) {
             $builder->whereNotIn('id', Revision::where('revisionables_type', self::class)->pluck('model_id'));
