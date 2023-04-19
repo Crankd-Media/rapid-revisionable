@@ -63,7 +63,7 @@ trait RevisionableTrait
         $this->createRevisionForModel($revision);
 
 
-        if ($force != true && $this->revisions()->count() >= $revisionableLimit) {
+        if ($this->revisions()->count() >= $revisionableLimit) {
             $this->revisions()->orderBy('created_at', 'ASC')->first()->delete();
         }
 
