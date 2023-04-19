@@ -6,9 +6,6 @@ ddev composer require crankd/rapid-revisions
 
 php artisan vendor:publish --provider="Crankd\RapidRevisions\RapidRevisionsProvider"
 
-
-
-
 ## LOCAL DEV SETUP
 
 Crankd\RapidRevisions\RapidRevisionsProvider::class,
