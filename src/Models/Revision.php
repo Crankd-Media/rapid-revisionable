@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace Crankd\RapidRevisions\Models;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;

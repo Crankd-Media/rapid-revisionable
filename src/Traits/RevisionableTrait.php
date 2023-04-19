@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Traits;
+namespace Crankd\RapidRevisions\Traits;
 
 use App\Models\Tenant;
-use App\Models\Revision;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Crankd\RapidRevisions\Models\Revision;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
-trait Revisionable
+trait RevisionableTrait
 {
     // boot function  only get where model id not in revisions model_id
     protected static function bootRevisionable()
