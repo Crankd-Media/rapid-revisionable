@@ -3,10 +3,7 @@
     'previewRoute' => '',
 ])
 
-<x-rapid::layout.tab-group.tab name="revisions"
-	label="Revisions" />
-
-<x-rapid::layout.tab-group.panel name="revisions">
+<x-rapid::ui.tab-group.panel name="revisions">
 	<sl-card class="card-header w-full">
 		<div slot="header"
 			class="py-3">
@@ -88,4 +85,4 @@
 			</dl>
 		</div>
 	</sl-card>
-</x-rapid::layout.tab-group.panel>
+</x-rapid::ui.tab-group.panel>
