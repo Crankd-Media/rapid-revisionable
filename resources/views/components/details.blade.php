@@ -22,9 +22,9 @@
 				</dt>
 				<dd class="mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0">
 					<div class="mb-2">{{ $modelRevision->name }}</div>
-					@if ($modelRevision->groups->count() > 0)
+					@if ($modelRevision->groups != null && $modelRevision->groups->count() > 0)
 						<div class="space-y-2">
-							@foreach ($modelRevision->groups as $group)
+							@foreach ($modelRevision->groups != null && $modelRevision->groups as $group)
 								<x-rapid::ui.accordion :title="$group->name">
 									<x-slot name="trigger">
 										<div class="bg-black/10 p-1">
