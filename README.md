@@ -2,12 +2,13 @@
 
 ## Install
 
+```bash
 ddev composer require crankd/rapid-revisions
 ddev php artisan vendor:publish --provider="Crankd\RapidRevisions\RapidRevisionsProvider"
 ddev php artisan migrate
+```
 
 ## How To Use
-
 
 ```php
 
