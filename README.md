@@ -44,7 +44,7 @@ class ProductImportController extends Controller
 
 ### Tabs
 
-```php
+```html
 <x-rapid-revisions::tab-group-render-revisions :model="$productImport"
         previewRoute="product-imports.preview"
         restoreRoute="product-imports.restore" />
@@ -52,7 +52,7 @@ class ProductImportController extends Controller
 
 ### Details
 
-```php
+```html
 <x-rapid-revisions::details :model="$productImport"
         previewRoute="product-imports.preview"
         restoreRoute="product-imports.restore" />
