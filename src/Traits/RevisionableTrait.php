@@ -49,7 +49,8 @@ trait RevisionableTrait
         $revision->saveQuietly();
 
         // if this has groups
-        if ($this->groups->count() > 0) {
+        if ($this->groups != null && $this->groups->count() > 0) {
+
             foreach ($this->groups as $group) {
                 $pivot = $group->pivot; // Retrieve the pivot entry for the group
                 $clonedPivot = $pivot->replicate(); // Create a copy of the pivot entry
@@ -79,7 +80,7 @@ trait RevisionableTrait
         $modelRestore = $revisionable->revisionables_type::withoutGlobalScope('revisionable')->where('id', $revisionable->model_id)->first();
         // if the modelCurrent has groups
         // get the current model groups
-        if ($modelCurrent->groups->count() > 0) {
+        if ($modelCurrent->groups != null && $modelCurrent->groups->count() > 0) {
             // update the group custom_field_values with the revision group custom_field_values
             foreach ($modelCurrent->groups as $group) {
                 $values = $modelRestore->groups->where('id', $group->id)->first()->pivot->custom_field_values;

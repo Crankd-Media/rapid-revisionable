@@ -10,7 +10,7 @@
 			<h3 class="text-lg font-medium leading-6 text-gray-900">Revisions</h3>
 		</div>
 
-		<x-rapid-revisions.details :model="$model"
+		<x-rapid-revisions::details :model="$model"
 			:previewRoute="$previewRoute" />
 	</sl-card>
 
