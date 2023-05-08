@@ -1,3 +1,4 @@
+@props(['model', 'previewRoute' => 'banks.preview', 'restoreRoute' => 'banks.restore'])
 <div class="">
 	<dl class="sm:divide-y sm:divide-gray-200">
 		@foreach ($model->revisions as $revisionable)
@@ -58,7 +59,7 @@
 					</x-rapid::ui.button>
 
 					<form class="inline-block"
-						action="{{ route('banks.restore', $revisionable->id) }}"
+						action="{{ route($restoreRoute, $revisionable->id) }}"
 						method="POST"
 						data-confirm="true">
 						@csrf

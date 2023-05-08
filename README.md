@@ -1,34 +1,57 @@
 # Rapid Revisions
 
-## LOAD JS FILES
+## Install
 
 ddev composer require crankd/rapid-revisions
+ddev php artisan vendor:publish --provider="Crankd\RapidRevisions\RapidRevisionsProvider"
+ddev php artisan migrate
 
-php artisan vendor:publish --provider="Crankd\RapidRevisions\RapidRevisionsProvider"
-php artisan migrate
-
-use RevisionableTrait;
-
-## LOCAL DEV SETUP
-
-Crankd\RapidRevisions\RapidRevisionsProvider::class,
+## How To Use
 
 
+```php
+
+use Crankd\RapidRevisions\Traits\RevisionableTrait;
+
+class ProductImport extends Model
+{
+    use RevisionableTrait;
+}
+```
+
+```php
+Route::get('product-imports/{productImport}/preview', [ProductImportController::class, "previewVersion"])->name('product-imports.preview');
+Route::post('product-imports/restore/{revision:id}', [ProductImportController::class, "restoreVersion"])->name('product-imports.restore');
+```
+
+```php
+class ProductImportController extends Controller
+{
+    ...
+
+    public function restoreVersion(Request $request, Revision $revision)
+    {
+        ProductImport::restoreRevision($revision);
+    }
+
+    public function previewVersion(Request $request, $productImportId)
+    {
+        $productImport = ProductImport::withoutGlobalScope('revisionable')->find($productImportId);
+    }
+}
+
+```
+
+### Tabs
+
+<x-rapid-revisions::tab-group-render-revisions :model="$productImport"
+        previewRoute="product-imports.preview"
+        restoreRoute="product-imports.restore" />
+
+### Details
+
+<x-rapid-revisions::details :model="$productImport"
+        previewRoute="product-imports.preview"
+        restoreRoute="product-imports.restore" />
 
 
-
-
-
-<pre>
-    "autoload": {
-        "psr-4": {
-            "App\\": "app/",
-            "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/",
-            "Crankd\\RapidRevisions\\": "packages/crankd/rapid-revisions/src"
-        }
-    },
-    </pre>
-
-import "../../packages/crankd/rapid-revisions/resources/js/rapid-revisions";
-import "../../packages/crankd/rapid-revisions/resources/css/rapid-revisions.css";
