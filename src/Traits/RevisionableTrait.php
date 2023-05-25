@@ -23,6 +23,27 @@ trait RevisionableTrait
         return $this->morphMany(Revision::class, 'revisionables')->orderBy('created_at', 'DESC');
     }
 
+    // is revisionable
+    public function isRevision()
+    {
+        // is this id in the revisions model_id
+        return Revision::where('revisionables_type', self::class)->where('model_id', $this->id)->count() > 0;
+    }
+
+    // isNotRevision
+    public function isNotRevision()
+    {
+        // is this id in the revisions model_id
+        return Revision::where('revisionables_type', self::class)->where('model_id', $this->id)->count() == 0;
+    }
+
+    // get parent model
+    public function getCurrentModel()
+    {
+        $parent_id  = Revision::where('revisionables_type', self::class)->where('model_id', $this->id)->first()->revisionables_id;
+        return self::withoutGlobalScope('revisionable')->where('id', $parent_id)->first();
+    }
+
 
     private function createRevisionForModel($model)
     {
